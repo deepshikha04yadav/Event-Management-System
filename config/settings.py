@@ -57,6 +57,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+import environ
+import os
+
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 import dj_database_url
 DATABASES = {
     'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
