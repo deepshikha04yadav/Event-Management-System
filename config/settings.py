@@ -100,23 +100,44 @@ LOGOUT_REDIRECT_URL = '/login/'
 # Update with real SMTP credentials in production
 # ──────────────────────────────────────────────
 
-import environ
+# import environ
+# import os
+
+# env = environ.Env()
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
+# # Written inside the Environment variable
+# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+# # For development, use console backend instead:
+# # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 import os
+import environ
 
 env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+environ.Env.read_env()
 
-# Written inside the Environment variable
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = env(
+    'EMAIL_BACKEND',
+    default='django.core.mail.backends.console.EmailBackend'
+)
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
 
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 
-# For development, use console backend instead:
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or 'noreply@ems.com'
